@@ -1,0 +1,4 @@
+date,age,blood_pressure,specific_gravity,albumin,sugar,red_blood_cells,pus_cell,pus_cell_clumps,bacteria,blood_glucose_random,blood_urea,serum_creatinine,sodium,potassium,haemoglobin,packed_cell_volume,white_blood_cell_count,red_blood_cell_count,hypertension,diabetes_mellitus,coronary_artery_disease,appetite,peda_edema,aanemia
+2024-01-01,55,140,1.015,1,0,1,1,0,0,150,40,1.5,140,4.2,13.5,40,8000,4.5,1,1,0,good,0,0
+2024-03-01,55,145,1.015,1,0,1,1,0,0,160,42,1.6,138,4.3,13.0,39,8200,4.4,1,1,0,good,0,0
+2024-06-01,55,150,1.020,2,1,0,0,1,0,170,45,1.8,137,4.5,12.8,38,8500,4.2,1,1,0,poor,1,1
