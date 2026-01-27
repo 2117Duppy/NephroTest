@@ -127,10 +127,10 @@ Output includes:
 ```
 MODEL PERFORMANCE METRICS
 ======================================================================
-📊 Accuracy:   99.75%
-📊 Precision:  100.00%
+📊 Accuracy:   98.50%
+📊 Precision:  98.03%
 📊 Recall:     99.60%
-📊 F1-Score:   99.80%
+📊 F1-Score:   98.81%
 📊 AUC-ROC:    0.9980
 
 CONFUSION MATRIX
