@@ -71,8 +71,8 @@ NephroTest is a comprehensive CKD detection system that uses machine learning to
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/ckd-detection-system.git
-cd ckd-detection-system
+git clone https://github.com/2117Duppy/NephroTest
+cd NephroTest
 ```
 
 ### 2. Create Virtual Environment
