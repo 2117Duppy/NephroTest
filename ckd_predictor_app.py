@@ -13,6 +13,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
 from datetime import datetime
+import os
+
+try:
+    import pymongo
+    HAS_PYMONGO = True
+except ImportError:
+    HAS_PYMONGO = False
 
 # ------------- Page config & colors -------------
 st.set_page_config(page_title="NEPHROTEST", layout="wide", page_icon="🩺")
@@ -130,6 +137,40 @@ def safe_rerun():
         st.query_params = q
     except Exception:
         pass
+
+def log_prediction_to_mongodb(features_df, pred, proba):
+    if not HAS_PYMONGO:
+        return
+    
+    # Try fetching connection URI from environment or secrets
+    mongo_uri = os.environ.get("MONGO_URI")
+    if not mongo_uri and "MONGO_URI" in st.secrets:
+        mongo_uri = st.secrets["MONGO_URI"]
+        
+    if not mongo_uri:
+        # Default connection string from user memory rule
+        mongo_uri = "mongodb+srv://prakhar1707:PLKT1RTBELUk7lYH@cluster1.z3qvq7e.mongodb.net/Delhinkdb"
+
+    try:
+        client = pymongo.MongoClient(mongo_uri, serverSelectionTimeoutMS=2000)
+        db = client.get_default_database()
+        collection = db["nephrotest_logs"]
+        
+        # Build log document
+        doc = features_df.iloc[0].to_dict()
+        doc["prediction"] = int(pred)
+        doc["prediction_label"] = "Low CKD Risk" if pred == 1 else "Likely CKD"
+        
+        if proba and "healthy_prob" in proba:
+            doc["healthy_probability"] = proba["healthy_prob"]
+            doc["ckd_probability"] = 1.0 - proba["healthy_prob"]
+            
+        doc["timestamp"] = datetime.utcnow()
+        
+        collection.insert_one(doc)
+    except Exception as e:
+        # Fail silently to avoid breaking patient workflow if DB is offline
+        print(f"MongoDB logging failed: {e}")
 
 def build_features_from_state():
     missing = [k for k in INPUT_KEYS if k not in st.session_state]
@@ -290,6 +331,10 @@ def input_page():
             st.session_state.last_features = features_df
             st.session_state.last_pred = int(pred[0])
             st.session_state.last_proba = proba
+            
+            # Log results to MongoDB securely & gracefully
+            log_prediction_to_mongodb(features_df, int(pred[0]), proba)
+            
             st.session_state.page = "results"
             safe_rerun()
             return

@@ -7,3 +7,5 @@ streamlit
 joblib
 shap
 xgboost
+pymongo
+dnspython
